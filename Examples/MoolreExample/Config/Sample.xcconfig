@@ -1,0 +1,13 @@
+// Build settings for the example app. Do not put credentials here:
+// copy Credentials.example.xcconfig to Credentials.xcconfig (git-ignored) instead.
+MOOLRE_ENVIRONMENT = SANDBOX
+MOOLRE_API_USER =
+MOOLRE_PUBLIC_KEY =
+MOOLRE_ACCOUNT_NUMBER =
+
+// Signing. Simulator builds need none; set DEVELOPMENT_TEAM in Credentials.xcconfig for a device.
+PRODUCT_BUNDLE_IDENTIFIER = com.moolre.example
+CODE_SIGN_STYLE = Automatic
+DEVELOPMENT_TEAM =
+
+#include? "Credentials.xcconfig"

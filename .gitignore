@@ -1,0 +1,14 @@
+.DS_Store
+.build/
+.swiftpm/
+/Packages
+xcuserdata/
+DerivedData/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+Package.resolved
+
+# Example app: generated project and local credentials
+Examples/MoolreExample/MoolreExample.xcodeproj/
+Examples/MoolreExample/MoolreExample/Info.plist
+Examples/MoolreExample/Config/Credentials.xcconfig
+Examples/MoolreExample/build/

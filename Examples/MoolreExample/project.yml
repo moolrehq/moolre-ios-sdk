@@ -1,0 +1,44 @@
+# Generate MoolreExample.xcodeproj with XcodeGen:
+#   brew install xcodegen
+#   cd Examples/MoolreExample && xcodegen generate
+name: MoolreExample
+options:
+  bundleIdPrefix: com.moolre
+  deploymentTarget:
+    iOS: "15.0"
+packages:
+  MoolreSDK:
+    path: ../..
+configFiles:
+  Debug: Config/Sample.xcconfig
+  Release: Config/Sample.xcconfig
+targets:
+  MoolreExample:
+    type: application
+    platform: iOS
+    sources:
+      - MoolreExample
+    dependencies:
+      - package: MoolreSDK
+        product: MoolreSwiftUI
+      - package: MoolreSDK
+        product: MoolreUIKit
+    info:
+      path: MoolreExample/Info.plist
+      properties:
+        CFBundleDisplayName: Moolre Example
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        MoolreEnvironment: $(MOOLRE_ENVIRONMENT)
+        MoolreAPIUser: $(MOOLRE_API_USER)
+        MoolrePublicKey: $(MOOLRE_PUBLIC_KEY)
+        MoolreAccountNumber: $(MOOLRE_ACCOUNT_NUMBER)
+    settings:
+      base:
+        SWIFT_VERSION: "5.9"
+        GENERATE_INFOPLIST_FILE: NO
+    preBuildScripts:
+      - name: Validate sample credentials
+        script: '"${SRCROOT}/scripts/validate-sample-credentials.sh"'
+        basedOnDependencyAnalysis: false
