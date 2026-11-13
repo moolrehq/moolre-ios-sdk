@@ -14,7 +14,18 @@ public enum MoolreBrand {
     public static let processingButtonTitle = "Processing payment"
 
     public static var logo: UIImage? {
-        UIImage(named: "moolre-logo", in: .module, compatibleWith: nil)
+        UIImage(named: "moolre-logo", in: resourceBundle, compatibleWith: nil)
+    }
+
+    /// SwiftPM exposes resources through `Bundle.module`; CocoaPods ships them in a
+    /// `MoolreCheckout.bundle` inside the framework (or the app, for static linking).
+    static var resourceBundle: Bundle {
+        #if SWIFT_PACKAGE
+        return .module
+        #else
+        let host = Bundle(for: BundleToken.self)
+        return host.url(forResource: "MoolreCheckout", withExtension: "bundle").flatMap(Bundle.init(url:)) ?? host
+        #endif
     }
 
     /// Button label with an optional `• GHS 25.00` amount suffix.
@@ -35,4 +46,8 @@ public enum MoolreBrand {
         return formatter.string(from: rounded as NSDecimalNumber) ?? "\(rounded)"
     }
 }
+
+#if !SWIFT_PACKAGE
+private final class BundleToken {}
+#endif
 #endif

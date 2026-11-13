@@ -12,3 +12,6 @@ Examples/MoolreExample/MoolreExample.xcodeproj/
 Examples/MoolreExample/MoolreExample/Info.plist
 Examples/MoolreExample/Config/Credentials.xcconfig
 Examples/MoolreExample/build/
+
+# CocoaPods lint/install artifacts
+Pods/

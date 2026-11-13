@@ -15,7 +15,7 @@ let package = Package(
         .library(name: "MoolreCore", targets: ["MoolreCore"])
     ],
     targets: [
-        .target(name: "MoolreCore"),
+        .target(name: "MoolreCore", resources: [.copy("PrivacyInfo.xcprivacy")]),
         .target(name: "MoolreCheckout", dependencies: ["MoolreCore"], resources: [.process("Resources")]),
         .target(name: "MoolreUIKit", dependencies: ["MoolreCore", "MoolreCheckout"]),
         .target(name: "MoolreSwiftUI", dependencies: ["MoolreCore", "MoolreCheckout"]),

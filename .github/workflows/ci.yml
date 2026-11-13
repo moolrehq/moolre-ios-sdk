@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  spm:
+    name: Swift Package
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unit tests
+        run: swift test
+      - name: Build for iOS
+        run: xcodebuild build -scheme MoolreSDK-Package -destination 'generic/platform=iOS'
+
+  cocoapods:
+    name: CocoaPods lint
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint podspecs
+        run: |
+          pod lib lint MoolreCore.podspec MoolreCheckout.podspec MoolreUIKit.podspec MoolreSwiftUI.podspec \
+            --include-podspecs='*.podspec' --platforms=ios

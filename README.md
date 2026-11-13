@@ -1,10 +1,11 @@
 # Moolre iOS SDK
 
-Moolre iOS SDK V1 provides hosted Moolre checkout for iOS applications using
-either UIKit or SwiftUI. Both entry points share the same payment-link,
-`ASWebAuthenticationSession` checkout, and transaction-verification
-implementation. It is the iOS counterpart of the Moolre Android SDK and follows
-the same API contract, error codes, and verification policy.
+The Moolre iOS SDK brings Moolre services to iOS applications built with UIKit
+or SwiftUI. The first release provides hosted Moolre checkout for payments;
+more Moolre services will be added as new modules.
+
+Both UI entry points share the same payment-link, `ASWebAuthenticationSession`
+checkout, and transaction-verification implementation.
 
 ## Requirements
 
@@ -14,8 +15,10 @@ the same API contract, error codes, and verification policy.
 
 ## Installation
 
-Add the package with Swift Package Manager (**File → Add Package
-Dependencies…** in Xcode) or in `Package.swift`:
+### Swift Package Manager
+
+Add the package in Xcode (**File → Add Package Dependencies…**, enter
+`https://github.com/moolrehq/moolre-ios-sdk.git`) or in `Package.swift`:
 
 ```swift
 dependencies: [
@@ -31,10 +34,28 @@ targets: [
 ]
 ```
 
+### CocoaPods
+
+Each SDK module is a separate pod with the same module name as its Swift
+package product. Add the UI pod you need to your `Podfile`; it pulls in
+`MoolreCore` and `MoolreCheckout` for you:
+
+```ruby
+platform :ios, '15.0'
+
+target 'YourApp' do
+  use_frameworks!
+
+  pod 'MoolreUIKit', '~> 1.0'    # UIKit application
+  # pod 'MoolreSwiftUI', '~> 1.0' # or SwiftUI application
+end
+```
+
+Then run `pod install` and open the generated `.xcworkspace`.
+
 Each UI product re-exports `MoolreCore` and `MoolreCheckout`, so a single
-`import MoolreUIKit` or `import MoolreSwiftUI` is enough. The repository URL
-above assumes the package has been published; while developing, add it as a
-local package.
+`import MoolreUIKit` or `import MoolreSwiftUI` is enough with either package
+manager.
 
 ## Example application
 
@@ -56,9 +77,8 @@ open MoolreExample.xcodeproj
 
 ### Configure credentials for the example
 
-`Config/Credentials.xcconfig` is the iOS equivalent of the Android samples'
-`local.properties`. It is git-ignored; the build copies its values into the
-app's Info.plist:
+`Config/Credentials.xcconfig` holds the example's credentials. It is
+git-ignored; the build copies its values into the app's Info.plist:
 
 ```
 MOOLRE_ENVIRONMENT = SANDBOX
@@ -149,7 +169,7 @@ let config = try MoolreConfig(
 scheme and host. Use a scheme unique to your app (for example
 `yourapp-moolre://payment-callback`).
 
-Unlike Android, **no host-app registration is needed**. You don't need
+**No host-app registration is needed**. You don't need
 `CFBundleURLTypes` or an `AppDelegate`/`SceneDelegate` URL handler, because
 `ASWebAuthenticationSession` intercepts the callback scheme itself. Don't also
 register the same scheme in your Info.plist for another purpose.
@@ -260,8 +280,8 @@ struct CheckoutButton: View {
 ```
 
 Override `containerColor`, `contentColor`, `borderColor`, `borderWidth`,
-`cornerRadius`, or `text` to restyle the button. The defaults match the
-Android SDK: white background, black content, a 1pt `#FDB93C` border, and a
+`cornerRadius`, or `text` to restyle the button. The defaults are a
+white background, black content, a 1pt `#FDB93C` border, and a
 light-grey disabled background. `MoolreTheme` exposes the brand colors, and
 `.moolreTheme()` applies the Moolre tint.
 
@@ -348,24 +368,27 @@ application-owned transport.
 ```sh
 swift test   # core + checkout unit tests, runs on macOS
 xcodebuild build -scheme MoolreSDK-Package -destination 'generic/platform=iOS'
+pod lib lint MoolreCore.podspec MoolreCheckout.podspec MoolreUIKit.podspec \
+  MoolreSwiftUI.podspec --include-podspecs='*.podspec' --platforms=ios
 ```
+
+See [RELEASING.md](RELEASING.md) for publishing a new version.
 
 Before production, test success, cancellation, network failure, missing
 references, and mismatched references in sandbox.
 
 ## Modules
 
-| Product | Purpose | Android equivalent |
-| --- | --- | --- |
-| `MoolreCore` | Models, gateway, URLSession payment-link service, verification coordinator | `android-sdk-core` |
-| `MoolreCheckout` | `ASWebAuthenticationSession` checkout, redirect validation, shared `MoolrePaymentLauncher` | `android-sdk-checkout` |
-| `MoolreUIKit` | UIKit `MoolrePayButton` | `android-sdk-views` |
-| `MoolreSwiftUI` | SwiftUI `MoolrePayButton` and `MoolreTheme` | `android-sdk-compose` |
+| Product | Purpose |
+| --- | --- |
+| `MoolreCore` | Models, gateway, URLSession payment-link service, verification coordinator |
+| `MoolreCheckout` | `ASWebAuthenticationSession` checkout, redirect validation, shared `MoolrePaymentLauncher` |
+| `MoolreUIKit` | UIKit `MoolrePayButton` |
+| `MoolreSwiftUI` | SwiftUI `MoolrePayButton` and `MoolreTheme` |
 
 Most applications should depend on `MoolreUIKit` or `MoolreSwiftUI`, not the
 lower-level products directly.
 
-## Related documentation
+## License
 
-- [Moolre Android SDK](../moolre-android-sdk/README.md)
-- [Moolre PHP SDK](https://github.com/moolrehq/moolre-php)
+The Moolre iOS SDK is released under the MIT License. See [LICENSE](LICENSE).
